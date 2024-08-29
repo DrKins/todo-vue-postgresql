@@ -9,22 +9,39 @@ export class TaskService {
   }
 
   async getTasks(req: Request, res: Response, next?: NextFunction) {
-    const tasks = await this.taskRepository.getTasks();
-    res.json(tasks);
+    try {
+      const tasks = await this.taskRepository.getTasks();
+      return tasks;
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching tasks" });
+      return null;
+    }
   }
 
   async createTask(req: Request, res: Response, next?: NextFunction) {
-    const task = await this.taskRepository.createTask(req, res);
-    res.json(task);
+    try {
+      const task = await this.taskRepository.createTask(req, res);
+      return task;
+    } catch (error) {
+      res.status(500).json({ message: "Error creating task" });
+    }
   }
 
   async deleteTask(req: Request, res: Response, next?: NextFunction) {
-    const task = await this.taskRepository.deleteTask(req, res);
-    res.json(task);
+    try {
+      const task = await this.taskRepository.deleteTask(req, res);
+      return task;
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting task" });
+    }
   }
 
   async updateTask(req: Request, res: Response, next?: NextFunction) {
-    const task = await this.taskRepository.updateTask(req, res);
-    res.json(task);
+    try {
+      const task = await this.taskRepository.updateTask(req, res);
+      return task;
+    } catch (error) {
+      res.send(500).json({ message: "Error updating task" });
+    }
   }
 }

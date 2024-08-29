@@ -52,7 +52,6 @@ function editTask(id) {
 function saveTask(id, content) {
   const task = data.value.find((task) => task.id === id);
   task.editable = false;
-  console.log(task.content, content);
   axios.put(`http://localhost:3002/api/tasks/${id}`, { content });
 }
 

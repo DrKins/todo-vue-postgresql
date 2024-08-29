@@ -28,7 +28,7 @@ export class TaskRepository {
   async deleteTask(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const results = await pool.query("DELETE FROM tasks WHERE id = $1", [id]);
+      await pool.query("DELETE FROM tasks WHERE id = $1", [id]);
       return "Task deleted successfully";
     } catch (error) {
       throw error;
@@ -39,10 +39,10 @@ export class TaskRepository {
     try {
       const { id } = req.params;
       const { content } = req.body;
-      const results = await pool.query(
-        "UPDATE tasks SET content = $1 WHERE id = $2",
-        [content, id],
-      );
+      await pool.query("UPDATE tasks SET content = $1 WHERE id = $2", [
+        content,
+        id,
+      ]);
       return "Task updated successfully";
     } catch (error) {
       throw error;
