@@ -3,11 +3,23 @@ import pool from "../config/db";
 import type { Task } from "../types/task";
 
 export class TaskRepository {
-  async getTasks(): Promise<Task[]> {
+  async getTasks(req: Request): Promise<Task[]> {
     try {
-      const results = await pool.query("SELECT * FROM tasks ORDER BY id ASC");
+      const { search } = req.query;
+      let query = "SELECT * FROM tasks";
+      let params: string[] = [];
+
+      if (search) {
+        query += " WHERE content ILIKE $1";
+        params = [`%${search}%`];
+      }
+
+      query += " ORDER BY id ASC";
+
+      const results = await pool.query(query, params);
       return results.rows;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }

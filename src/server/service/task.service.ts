@@ -10,7 +10,7 @@ export class TaskService {
 
   async getTasks(req: Request, res: Response, next?: NextFunction) {
     try {
-      const tasks = await this.taskRepository.getTasks();
+      const tasks = await this.taskRepository.getTasks(req);
       return tasks;
     } catch (error) {
       res.status(500).json({ message: "Error fetching tasks" });

@@ -2,10 +2,20 @@
   <div class="container">
     <img src="./assets/logo.svg" />
     <h1>Task list</h1>
-    <input
-      v-model="newTask"
-      placeholder="Add task"
-      @keydown.enter="createTask" />
+    <div class="top-section">
+      <input
+        v-model="newTask"
+        :placeholder="searchMode ? 'Search tasks' : 'Add new task'"
+        @keydown.enter="searchMode ? searchData() : createTask()" />
+      <button
+        @click="
+          searchMode
+            ? (fetchData(), (searchMode = !searchMode))
+            : (searchMode = !searchMode)
+        ">
+        current state: {{ searchMode ? "search data" : "add data" }}
+      </button>
+    </div>
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <ul v-else>
@@ -41,6 +51,7 @@ import axios from "axios";
 
 const data = ref([]);
 const loading = ref(true);
+const searchMode = ref(false);
 const error = ref(null);
 const newTask = ref("");
 
@@ -83,6 +94,21 @@ const fetchData = async () => {
     data.value = response.data;
   } catch (err) {
     error.value = "Failed to load data";
+  } finally {
+    loading.value = false;
+  }
+};
+
+const searchData = async () => {
+  try {
+    const response = await axios.get("http://localhost:3002/api/tasks", {
+      params: {
+        search: newTask.value,
+      },
+    });
+    data.value = response.data;
+  } catch (err) {
+    error.value = "Failed to search data";
   } finally {
     loading.value = false;
   }
@@ -140,5 +166,21 @@ ul {
 
 .icon--save {
   color: green;
+}
+
+.top-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-section button {
+  height: 40px;
+  background-color: #3d76b8;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: semibold;
+  border: none;
 }
 </style>
